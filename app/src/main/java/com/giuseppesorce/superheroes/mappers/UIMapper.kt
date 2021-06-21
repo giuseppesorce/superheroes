@@ -39,7 +39,7 @@ class UIMapper @Inject constructor() {
         return emptyList()
     }
 
-    private fun getImage(thumbnail: SThumbnail?): String {
+     fun getImage(thumbnail: SThumbnail?): String {
         return thumbnail?.path?.let { path ->
             path + "." + thumbnail?.extension
         } ?: ""

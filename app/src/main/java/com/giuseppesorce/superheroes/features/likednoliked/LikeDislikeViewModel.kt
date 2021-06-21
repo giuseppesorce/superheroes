@@ -51,7 +51,7 @@ class LikeDislikeViewModel @Inject constructor(
         changeSuperHero(item.id, true)
     }
 
-    private fun changeSuperHero(id: Int, like: Boolean) {
+     fun changeSuperHero(id: Int, like: Boolean) {
 
         viewModelScope.launch {
             var heroes= changeLikeSuperHeroUseCase.invoke(id, isLikeList, like)

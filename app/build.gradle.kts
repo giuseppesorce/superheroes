@@ -55,7 +55,7 @@ dependencies {
     implementation(project(":network"))
     implementation(project(":persistence"))
     implementation(project(":cardviewswipe"))
-    //dipendencies
+    //dependencies
     implementation(Deps.KOTLIN_STLIB)
     implementation(Deps.coreKtx)
     implementation(Deps.appCompact)
@@ -99,15 +99,14 @@ dependencies {
     //  Retrofit
     implementation(Network.RETROFIT)
     implementation(Network.OKHTTP)
-//    // Interceptors
-//    implementation(Network.LOGGIG_INTERCEPTOR)
-    //Coil
+    //Coil : image loader
     implementation(Deps.UIDesign.COIL)
+    //Base artifact without singleton
+    implementation(Deps.UIDesign.COIL_BASE)
     //Lottie
     implementation(Network.KOTLIN_SER_CONVERTER)
     implementation(Deps.UIDesign.LOTTIE)
-    //Base artifact without singleton
-    implementation(Deps.UIDesign.COIL_BASE)
+
     //Leak Canary
     debugImplementation(Deps.KANARY_DEP)
 
@@ -117,7 +116,6 @@ dependencies {
     kapt(Room.ROOM_COMMONS)
     implementation(Room.ROOM_RTX)
     androidTestImplementation(Room.ROOM_TESTING)
-
 
     //Mock
     testImplementation(MockingLib.MOCKK_DEP)

@@ -14,6 +14,12 @@ import retrofit2.http.Query
 interface ApiService {
     @DecodeErrorBody
     @GET("v1/public/characters")
-    suspend fun characters(@Query("apikey") apikey:String, @Query("ts") ts:String, @Query("hash") hash:String ,  @Query("orderBy") orderBy:String,  @Query("limit") limit:Int) : ApiResult<SCharactersResponse, ErrorResponse>
+    suspend fun characters(
+        @Query("apikey") apikey: String,
+        @Query("ts") ts: String,
+        @Query("hash") hash: String,
+        @Query("orderBy") orderBy: String,
+        @Query("limit") limit: Int
+    ): ApiResult<SCharactersResponse, ErrorResponse>
 
 }

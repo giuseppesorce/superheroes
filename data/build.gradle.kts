@@ -64,4 +64,18 @@ dependencies {
     // Coroutines
     implementation(Kotlin.COROUTINES)
     implementation(Kotlin.COROUTINES_ANDROID)
+
+
+    //Mock
+    testImplementation(MockingLib.MOCKK_DEP)
+    testImplementation(MockingLib.CORETESTING)
+    testImplementation(MockingLib.MOCK_COROUTINES)
+    testImplementation(AndroidTestingLib.RETROFIT_MOCK)
+
+
+    //TESTING
+    testImplementation(TestingLib.JUNIT)
+    androidTestImplementation(AndroidTestingLib.ANDROIDX_TEST_EXT_JUNIT)
+    androidTestImplementation(AndroidTestingLib.ANDROIDX_TEST_RULES)
+    androidTestImplementation(AndroidTestingLib.ESPRESSO_CORE)
 }

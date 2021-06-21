@@ -7,7 +7,6 @@ repositories{
     mavenCentral()
 }
 
-
 object Plugins {
     const val AGP = "4.2.0"
     const val DOKKA = "1.4.32"

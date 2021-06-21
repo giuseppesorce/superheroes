@@ -26,12 +26,12 @@ allprojects {
         mavenCentral()
     }
     configurations.all {
+        // this resolves M1 problem with sqlite
         resolutionStrategy {
             force( "org.xerial:sqlite-jdbc:3.34.0")
         }
     }
 }
-
 
 tasks.register("clean", Delete::class) {
     delete(rootProject.buildDir)
