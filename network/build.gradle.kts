@@ -38,7 +38,7 @@ dependencies {
     //DIPENDENCY
     implementation(Deps.KOTLIN_STLIB)
     implementation(Deps.coreKtx)
-    //DIPENDENCY INJECTION
+    //DEPENDENCY INJECTION
     //dagger
     implementation(DI.DAGGER_DEP)
     kapt(DI.DAGGER_ANNOTATION)
