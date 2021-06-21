@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <ImageView
+        android:id="@+id/ivHero"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+
+        android:src="@drawable/superhero"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/back_card_info_square"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivHero">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="4dp"
+            android:background="@color/colorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="15dp"
+            android:fontFamily="@font/marvel_regular"
+            android:text="SUPERHEROES"
+            android:textColor="@color/white"
+            android:textSize="28dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvDescription"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/marvel_regular"
+            android:maxLines="3"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tvName"
+            app:layout_constraintTop_toBottomOf="@+id/tvName"
+            tools:text="Caught in a gamma bomb explosion while trying to save the life of a teenager, Dr. Bruce Banner was transformed into the incredibly powerful creature called the Hulk. An all too often misunderstood hero, the angrier the Hulk gets, the stronger the Hulk gets" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvSeriesLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/colorPrimary"
+            android:fontFamily="@font/marvel_regular"
+            android:paddingStart="10dp"
+            android:paddingTop="5dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="5dp"
+            android:text="@string/series"
+            android:textColor="@color/white"
+            android:textSize="18dp"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvDescription" />
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvSeries"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:background="@color/white"
+            android:fontFamily="@font/marvel_regular"
+            android:gravity="center"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/tvSeriesLabel"
+
+            app:layout_constraintStart_toEndOf="@+id/tvSeriesLabel"
+            app:layout_constraintTop_toTopOf="@+id/tvSeriesLabel"
+            tools:text="10000" />
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvComicsLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/colorPrimary"
+            android:fontFamily="@font/marvel_regular"
+            android:paddingStart="10dp"
+            android:paddingTop="5dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="5dp"
+            android:text="Comics"
+            android:textColor="@color/white"
+            android:textSize="18dp"
+
+            app:layout_constraintStart_toEndOf="@id/tvSeries"
+            app:layout_constraintTop_toBottomOf="@+id/tvDescription" />
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvComics"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:background="@color/white"
+            android:fontFamily="@font/marvel_regular"
+            android:gravity="center"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:text="0"
+            android:textColor="@color/colorPrimary"
+
+            android:textSize="16dp"
+            android:textStyle="bold"
+
+            app:layout_constraintBottom_toBottomOf="@+id/tvComicsLabel"
+            app:layout_constraintStart_toEndOf="@+id/tvComicsLabel"
+            app:layout_constraintTop_toTopOf="@+id/tvComicsLabel" />
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvStoriesLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@color/colorPrimary"
+
+            android:fontFamily="@font/marvel_regular"
+            android:paddingStart="10dp"
+            android:paddingTop="5dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="5dp"
+            android:text="STORIES"
+            android:textColor="@color/white"
+            android:textSize="18dp"
+
+            app:layout_constraintStart_toStartOf="@+id/tvSeriesLabel"
+            app:layout_constraintTop_toBottomOf="@+id/tvSeriesLabel" />
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvStories"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:background="@color/white"
+            android:fontFamily="@font/marvel_regular"
+            android:gravity="center"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:textColor="@color/colorPrimary"
+            android:textSize="14dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/tvStoriesLabel"
+            app:layout_constraintStart_toEndOf="@+id/tvStoriesLabel"
+            app:layout_constraintTop_toTopOf="@+id/tvStoriesLabel"
+            tools:text="10" />
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvEventsLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:background="@color/colorPrimary"
+            android:fontFamily="@font/marvel_regular"
+            android:paddingStart="10dp"
+            android:paddingTop="5dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="5dp"
+            android:text="EVENTS"
+            android:textColor="@color/white"
+
+            android:textSize="18dp"
+            app:layout_constraintStart_toEndOf="@id/tvStories"
+            app:layout_constraintTop_toTopOf="@+id/tvStories" />
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvEvents"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:background="@color/white"
+            android:fontFamily="@font/marvel_regular"
+            android:gravity="center"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:text="0"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/tvEventsLabel"
+            app:layout_constraintStart_toEndOf="@+id/tvEventsLabel"
+            app:layout_constraintTop_toTopOf="@+id/tvEventsLabel"
+            tools:text="1220" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

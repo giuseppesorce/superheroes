@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    app:startDestination="@id/splashFragment">
+
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.giuseppesorce.superheroes.features.splash.SplashFragment"
+        android:label="SplashFragment" >
+        <action
+            android:id="@+id/action_splashFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.giuseppesorce.superheroes.features.home.HomeFragment"
+        android:label="HomeFragment" >
+        <action
+            android:id="@+id/action_homeFragment_to_likeDislikeFragment"
+            app:destination="@id/likeDislikeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/likeDislikeFragment"
+        android:name="com.giuseppesorce.superheroes.features.likednoliked.LikeDislikeDialogFragment"
+        android:label="LikeDislikeFragment" />
+</navigation>

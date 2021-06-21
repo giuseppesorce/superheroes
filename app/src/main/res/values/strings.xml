@@ -1,0 +1,6 @@
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ExtraTranslation">
+    <string name="app_name">SuperHeroes</string>
+    <string name="there_are_no_superheroes_on_this_list">There are no superheroes on this list</string>
+    <string name="series" >SERIES</string>
+    <string name="genericError">Server error</string>
+</resources>
