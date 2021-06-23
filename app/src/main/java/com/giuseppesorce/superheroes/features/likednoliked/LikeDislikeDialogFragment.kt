@@ -5,33 +5,33 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.giuseppesorce.superheroes.R
-import com.giuseppesorce.superheroes.adapters.CardStackAdapter
 import com.giuseppesorce.superheroes.adapters.HerosAdapter
 import com.giuseppesorce.superheroes.databinding.FragmentLikedislikeBinding
-import com.giuseppesorce.superheroes.databinding.FragmentSplashBinding
 import com.giuseppesorce.superheroes.models.LIKE_PARAMETER
 import com.giuseppesorce.superheroes.models.SuperHero
 import com.giuseppesorce.superheroes.models.navigationevents.LikeEvents
 import com.giuseppesorce.superheroes.models.navigationevents.LikeState
-import com.giuseppesorce.vodafone.architecture.base.BaseViewBindingDialogFragment
-import com.giuseppesorce.vodafone.architecture.base.BaseViewBindingFragment
-import com.giuseppesorce.vodafone.architecture.base.BaseViewModel
+import com.giuseppesorce.vodafone.architecture.viewmodels.BaseFlowViewModel
+import com.giuseppesorce.vodafone.architecture.views.BaseDialogFragment
 import com.giuseppesorce.vodafone.commons.encrypt.show
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collect
 
 
 @AndroidEntryPoint
-class LikeDislikeDialogFragment : BaseViewBindingDialogFragment<LikeState, LikeEvents>() {
+class LikeDislikeDialogFragment : BaseDialogFragment<LikeState, LikeEvents>() {
 
     private var _binding: FragmentLikedislikeBinding? = null
     private val binding get() = _binding!!
     private val viewModel: LikeDislikeViewModel by viewModels()
-    override fun provideBaseViewModel(): BaseViewModel<LikeState, LikeEvents>? = viewModel
-
+    override fun provideBaseViewModel(): BaseFlowViewModel<LikeState, LikeEvents> = viewModel
+    private var jobList: Job? = null
+    private var jobEmpty: Job? = null
     private var adapter: HerosAdapter? = HerosAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,14 +39,6 @@ class LikeDislikeDialogFragment : BaseViewBindingDialogFragment<LikeState, LikeE
         setStyle(STYLE_NORMAL, R.style.dialog_progress)
     }
 
-    override fun handleState(state: LikeState) {
-    }
-
-    override fun handleEvent(event: LikeEvents) {
-        when(event){
-            is LikeEvents.GoBack-> dismiss()
-        }
-    }
 
     override fun setupUI() {
 
@@ -77,17 +69,29 @@ class LikeDislikeDialogFragment : BaseViewBindingDialogFragment<LikeState, LikeE
     }
 
     override fun observerData() {
-        viewModel.superHeroesLD.observe(this, Observer { list ->
-                   adapter?.itemsList = list ?: emptyList()
-        })
 
-        viewModel.showEmptyLD.observe(this, Observer { show ->
-          binding.tvEmpty.show(show)
-        })
+
+        jobList= lifecycleScope.launchWhenStarted {
+           viewModel.superHeroesFlow.collect {
+               adapter?.itemsList= it ?: emptyList()
+           }
+        }
+
+
+
+        jobEmpty= lifecycleScope.launchWhenStarted {
+            viewModel.showEmptyFlow.collect {
+                binding.tvEmpty.show(false)
+            }
+        }
+
+
     }
 
     override fun cleanFragment() {
         _binding = null
+        jobEmpty?.cancel()
+        jobList?.cancel()
     }
 
     override fun setFragmentViewBinding(inflater: LayoutInflater, container: ViewGroup?) {
@@ -105,5 +109,15 @@ class LikeDislikeDialogFragment : BaseViewBindingDialogFragment<LikeState, LikeE
                 putBoolean(LIKE_PARAMETER, isLike)
             }
         }
+    }
+
+    override fun handleEvent(uiEvent: LikeEvents?) {
+        when(uiEvent){
+            is LikeEvents.GoBack-> dismiss()
+        }
+    }
+
+    override fun handleUiState(state: LikeState?) {
+
     }
 }

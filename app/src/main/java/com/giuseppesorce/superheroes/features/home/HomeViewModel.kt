@@ -1,13 +1,14 @@
 package com.giuseppesorce.superheroes.features.home
 
-import android.util.Log
+
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.giuseppesorce.superheroes.R
 import com.giuseppesorce.superheroes.mappers.UIMapper
 import com.giuseppesorce.superheroes.models.SuperHero
 import com.giuseppesorce.superheroes.models.navigationevents.*
-import com.giuseppesorce.vodafone.architecture.base.BaseViewModel
+
+import com.giuseppesorce.vodafone.architecture.viewmodels.BaseFlowViewModel
 import com.giuseppesorce.vodafone.data.models.ErrorResponse
 import com.giuseppesorce.vodafone.data.models.SCharactersResponse
 import com.giuseppesorce.vodafone.data.network.ApiResult
@@ -16,6 +17,8 @@ import com.giuseppesorce.vodafone.domain.interactors.GetCharactersUseCase
 import com.giuseppesorce.vodafone.domain.interactors.SetCharacterLikeOrDislikedUseCase
 import com.yuyakaido.android.cardstackview.Direction
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.IOException
@@ -31,13 +34,15 @@ class HomeViewModel @Inject constructor(
     private val setCharacterLikeOrDislikedUseCase: SetCharacterLikeOrDislikedUseCase,
     private val uiMapper: UIMapper
 
-) : BaseViewModel<HomeState, HomeEvents>() {
+) : BaseFlowViewModel<HomeState, HomeEvents>() {
 
-    var superHeroes: List<SuperHero>? = null
-    var superHeroesLD = MutableLiveData<List<SuperHero>>()
+
     var positionCard = 0
     var isInLike:Boolean= false
 
+
+    private val superHeroes = MutableStateFlow(emptyList<SuperHero>())
+    val superHeroesFlow: StateFlow<List<SuperHero>> = superHeroes
 
     fun loadCharacters() {
         showLoading()
@@ -55,14 +60,10 @@ class HomeViewModel @Inject constructor(
                 }
             }
         }
-
-
     }
 
      fun createCharacters(response: SCharactersResponse) {
-        superHeroes = uiMapper.getSuperHeroesList(response)
-        superHeroesLD.value = superHeroes
-    }
+         superHeroes.value= uiMapper.getSuperHeroesList(response)}
 
      fun checkErrorUnKnow(error: Throwable) {
         viewState = HomeState.ShowError(R.string.genericError)
@@ -95,7 +96,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onCardSwiped(direction: Direction?) {
-        var superHero = superHeroes?.get(positionCard)
+        var superHero = superHeroes?.value?.get(positionCard)
         when(isInLike){
             true -> viewState = HomeState.ShowLikeAnimation
             else -> viewState = HomeState.ShowDisLikeAnimation

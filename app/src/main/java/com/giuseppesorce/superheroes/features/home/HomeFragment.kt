@@ -10,18 +10,16 @@ import android.view.animation.LinearInterpolator
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
-
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DefaultItemAnimator
 import com.giuseppesorce.superheroes.R
-
 import com.giuseppesorce.superheroes.adapters.CardStackAdapter
 import com.giuseppesorce.superheroes.databinding.FragmentHomeBinding
 import com.giuseppesorce.superheroes.features.likednoliked.LikeDislikeDialogFragment
 import com.giuseppesorce.superheroes.models.navigationevents.HomeEvents
 import com.giuseppesorce.superheroes.models.navigationevents.HomeState
-import com.giuseppesorce.vodafone.architecture.base.BaseViewBindingFragment
-import com.giuseppesorce.vodafone.architecture.base.BaseViewModel
+import com.giuseppesorce.vodafone.architecture.viewmodels.BaseFlowViewModel
+import com.giuseppesorce.vodafone.architecture.views.BaseFragment
 import com.giuseppesorce.vodafone.commons.encrypt.show
 import com.google.android.material.snackbar.Snackbar
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager
@@ -29,83 +27,22 @@ import com.yuyakaido.android.cardstackview.CardStackListener
 import com.yuyakaido.android.cardstackview.Direction
 import com.yuyakaido.android.cardstackview.SwipeableMethod
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collect
 
 
 @AndroidEntryPoint
-class HomeFragment : BaseViewBindingFragment<HomeState, HomeEvents>(), CardStackListener {
+class HomeFragment : BaseFragment<HomeState, HomeEvents>(), CardStackListener {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+    private var jobList: Job? = null
     private val viewModel: HomeViewModel by viewModels()
+
     private lateinit var layoutManager: CardStackLayoutManager
-    override fun provideBaseViewModel(): BaseViewModel<HomeState, HomeEvents>? = viewModel
+    override fun provideBaseViewModel(): BaseFlowViewModel<HomeState, HomeEvents> = viewModel
 
     private var adapter: CardStackAdapter?= CardStackAdapter()
-
-    override fun handleState(state: HomeState) {
-
-        when(state){
-            is HomeState.ShowLikeAnimation-> showLikeAnimation()
-            is HomeState.ShowDisLikeAnimation-> showDisLikeAnimation()
-            is HomeState.ShowError-> showSnakeMessage(getString(state.error), binding.clRoot, R.color.colorPrimary,R.color.white )
-        }
-    }
-
-    private fun showLikeAnimation() {
-
-        binding.animLike.show(true)
-        binding.animLike.setAnimation("like2.json");
-
-        binding.animLike.playAnimation()
-        binding.animLike.addAnimatorListener(object : Animator.AnimatorListener{
-            override fun onAnimationRepeat(animation: Animator?) {
-            }
-
-            override fun onAnimationEnd(animation: Animator?) {
-                binding.animLike.show(false)
-            }
-
-            override fun onAnimationCancel(animation: Animator?) {
-            }
-            override fun onAnimationStart(animation: Animator?) {
-            }
-        })
-    }
-
-    private fun showDisLikeAnimation() {
-
-        binding.animLike.show(true)
-        binding.animLike.setAnimation("dislike1.json");
-
-        binding.animLike.playAnimation()
-        binding.animLike.addAnimatorListener(object : Animator.AnimatorListener{
-            override fun onAnimationRepeat(animation: Animator?) {
-            }
-
-            override fun onAnimationEnd(animation: Animator?) {
-                binding.animLike.show(false)
-            }
-
-            override fun onAnimationCancel(animation: Animator?) {
-            }
-            override fun onAnimationStart(animation: Animator?) {
-            }
-        })
-    }
-
-
-
-    override fun handleEvent(event: HomeEvents) {
-        when(event){
-
-            is HomeEvents.GotoLikedOrDislikeHeroes ->{
-               val dialog= LikeDislikeDialogFragment.newInstance(event.isLike)
-                val ftManager= activity?.supportFragmentManager?.beginTransaction()
-                ftManager?.let {  dialog.show(it,LikeDislikeDialogFragment.DIALOG_TAG) }
-            }
-        }
-    }
-
     override fun setupUI() {
 
         activity?.let {
@@ -136,13 +73,16 @@ class HomeFragment : BaseViewBindingFragment<HomeState, HomeEvents>(), CardStack
 
     override fun cleanFragment() {
         _binding = null
+        jobList?.cancel()
 
     }
 
     override fun observerData() {
-        viewModel.superHeroesLD.observe(this,  { list ->
-            adapter?.itemsList= list ?: emptyList()
-        })
+        jobList= lifecycleScope.launchWhenStarted {
+            viewModel.superHeroesFlow.collect {
+               adapter?.itemsList= it
+            }
+        }
     }
 
     override fun setFragmentViewBinding(inflater: LayoutInflater, container: ViewGroup?) {
@@ -198,7 +138,7 @@ class HomeFragment : BaseViewBindingFragment<HomeState, HomeEvents>(), CardStack
     }
 
     override fun onCardCanceled() {
-        Log.i("marvel", "onCardCanceled")
+
     }
 
     override fun onCardAppeared(view: View?, position: Int) {
@@ -209,5 +149,66 @@ class HomeFragment : BaseViewBindingFragment<HomeState, HomeEvents>(), CardStack
     override fun onCardDisappeared(view: View?, position: Int) {
         Log.i("marvel", "onCardDisappeared: position: $position")
         viewModel.onCardDisappeared(position)
+    }
+
+    override fun handleEvent(uiEvent: HomeEvents?) {
+        when(uiEvent){
+
+            is HomeEvents.GotoLikedOrDislikeHeroes ->{
+                val dialog= LikeDislikeDialogFragment.newInstance(uiEvent.isLike)
+                val ftManager= activity?.supportFragmentManager?.beginTransaction()
+                ftManager?.let {  dialog.show(it,LikeDislikeDialogFragment.DIALOG_TAG) }
+            }
+        }
+    }
+
+    override fun handleUiState(state: HomeState?) {
+        when(state){
+            is HomeState.ShowLikeAnimation-> showLikeAnimation()
+            is HomeState.ShowDisLikeAnimation-> showDisLikeAnimation()
+            is HomeState.ShowError-> showSnakeMessage(getString(state.error), binding.clRoot, R.color.colorPrimary,R.color.white )
+        }
+    }
+
+    private fun showLikeAnimation() {
+
+        binding.animLike.show(true)
+        binding.animLike.setAnimation("like2.json");
+
+        binding.animLike.playAnimation()
+        binding.animLike.addAnimatorListener(object : Animator.AnimatorListener{
+            override fun onAnimationRepeat(animation: Animator?) {
+            }
+
+            override fun onAnimationEnd(animation: Animator?) {
+                binding.animLike.show(false)
+            }
+
+            override fun onAnimationCancel(animation: Animator?) {
+            }
+            override fun onAnimationStart(animation: Animator?) {
+            }
+        })
+    }
+
+    private fun showDisLikeAnimation() {
+
+        binding.animLike.show(true)
+        binding.animLike.setAnimation("dislike1.json");
+
+        binding.animLike.playAnimation()
+        binding.animLike.addAnimatorListener(object : Animator.AnimatorListener{
+            override fun onAnimationRepeat(animation: Animator?) {
+            }
+
+            override fun onAnimationEnd(animation: Animator?) {
+                binding.animLike.show(false)
+            }
+
+            override fun onAnimationCancel(animation: Animator?) {
+            }
+            override fun onAnimationStart(animation: Animator?) {
+            }
+        })
     }
 }

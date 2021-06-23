@@ -4,7 +4,8 @@ import android.os.Handler
 import android.os.Looper
 import com.giuseppesorce.superheroes.models.navigationevents.MainEvents
 import com.giuseppesorce.superheroes.models.navigationevents.MainState
-import com.giuseppesorce.vodafone.architecture.base.BaseViewModel
+
+import com.giuseppesorce.vodafone.architecture.viewmodels.BaseFlowViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -15,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SplashViewModel @Inject constructor(
 
-) : BaseViewModel<MainState, MainEvents>() {
+) : BaseFlowViewModel<MainState, MainEvents>() {
     fun checkUser() {
         // this method is fake, it simulate cheking token or user check
         Handler(Looper.myLooper()!!).postDelayed({

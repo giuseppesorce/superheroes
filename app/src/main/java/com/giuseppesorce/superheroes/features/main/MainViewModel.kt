@@ -4,7 +4,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 
 import com.giuseppesorce.superheroes.models.navigationevents.MainEvents
 import com.giuseppesorce.superheroes.models.navigationevents.MainState
-import com.giuseppesorce.vodafone.architecture.base.BaseViewModel
+
+import com.giuseppesorce.vodafone.architecture.viewmodels.BaseFlowViewModel
 import javax.inject.Inject
 
 /**
@@ -12,6 +13,6 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class MainViewModel  @Inject constructor(
-) : BaseViewModel<MainState, MainEvents>() {
+) : BaseFlowViewModel<MainState, MainEvents>() {
 
 }

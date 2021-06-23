@@ -25,7 +25,7 @@ import java.io.IOException
  */
 class HomeViewModelTest {
 
-    lateinit var homeViewModel:HomeViewModel
+    lateinit var homeViewModel:HomeViewModel<Any?,Any?>
 
     @MockK
     lateinit var getCharactersUseCase: GetCharactersUseCase

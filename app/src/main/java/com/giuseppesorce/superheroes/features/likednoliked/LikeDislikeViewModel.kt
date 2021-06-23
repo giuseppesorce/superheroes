@@ -8,10 +8,12 @@ import com.giuseppesorce.superheroes.models.LIKE_PARAMETER
 import com.giuseppesorce.superheroes.models.SuperHero
 import com.giuseppesorce.superheroes.models.navigationevents.LikeEvents
 import com.giuseppesorce.superheroes.models.navigationevents.LikeState
-import com.giuseppesorce.vodafone.architecture.base.BaseViewModel
+import com.giuseppesorce.vodafone.architecture.viewmodels.BaseFlowViewModel
 import com.giuseppesorce.vodafone.domain.interactors.ChangeLikeSuperHeroUseCase
 import com.giuseppesorce.vodafone.domain.interactors.GetCharacterLikeOrDislikedUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,23 +28,23 @@ class LikeDislikeViewModel @Inject constructor(
     private val changeLikeSuperHeroUseCase: ChangeLikeSuperHeroUseCase,
     private val uiMapper: UIMapper
 
-) : BaseViewModel<LikeState, LikeEvents>() {
+) : BaseFlowViewModel<LikeState, LikeEvents>() {
 
     private var isLikeList: Boolean=false
-    var superHeroes: List<SuperHero>? = null
-    var superHeroesLD = MutableLiveData<List<SuperHero>>()
 
-    var showEmpty:Boolean= false
-    var showEmptyLD = MutableLiveData<Boolean>()
+    private val superHeroes = MutableStateFlow(emptyList<SuperHero>())
+    val superHeroesFlow: StateFlow<List<SuperHero>> = superHeroes
+
+    var showEmpty= MutableStateFlow(false)
+    var showEmptyFlow : StateFlow<Boolean> = showEmpty
     fun getHeroes() {
 
          isLikeList = handle.get<Boolean>(LIKE_PARAMETER) ?: false
         viewModelScope.launch {
             var heroes= getCharacterLikeOrDislikedUseCase.invoke(isLikeList)
-            superHeroes= uiMapper.getSuperHeroesListFromDb(heroes)
-            superHeroesLD.value= superHeroes
-            showEmpty= superHeroes?.isEmpty() ?: true
-            showEmptyLD.value= showEmpty
+            superHeroes.value=  uiMapper.getSuperHeroesListFromDb(heroes)
+            showEmpty.value= superHeroes?.value?.isEmpty() ?: false
+
 
         }
     }
@@ -55,10 +57,8 @@ class LikeDislikeViewModel @Inject constructor(
 
         viewModelScope.launch {
             var heroes= changeLikeSuperHeroUseCase.invoke(id, isLikeList, like)
-            superHeroes= uiMapper.getSuperHeroesListFromDb(heroes)
-            superHeroesLD.value= superHeroes
-            showEmpty= superHeroes?.isEmpty() ?: true
-            showEmptyLD.value= showEmpty
+            superHeroes.value=  uiMapper.getSuperHeroesListFromDb(heroes)
+            showEmpty.value= superHeroes?.value.isEmpty() ?: true
         }
     }
 
@@ -69,6 +69,5 @@ class LikeDislikeViewModel @Inject constructor(
     fun onSelectBack() {
        emitEvent(LikeEvents.GoBack)
     }
-
 
 }
